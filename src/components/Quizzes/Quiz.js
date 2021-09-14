@@ -15,7 +15,7 @@ return (
     <>
     <ul>
     {quizzes.map(quiz => {
-        return <li>{quiz.quizName}</li>
+        return <li key={quiz.id}>{quiz.quizName}</li>
     })}
     </ul>
     </>
