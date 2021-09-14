@@ -1,18 +1,33 @@
 import React from 'react'
 import { Quiz } from './Quizzes/Quiz'
 import { Navbar } from './Navbar/Navbar'
+import { Route, Redirect, Router } from 'react-router-dom'
+import useSimpleAuth from '../hooks/UseSimpleAuth'
+import Login from './Auth/Login'
+import { Register } from './Auth/Register'
+import { ApplicationViews } from '../ApplicationViews'
 
 export const Quizzical = () => {
-    // const [quizzes, updateQuizzes] = useState([])
+    const { isAuthenticated } = useSimpleAuth()
 
-    return (
-        <>
-        <Navbar />
-        <h1>Welcome to Quizzical</h1>
-        <h2>Featured Quizzes</h2>
-        <Quiz />
-        </>
-    )
+    return <>
+        <Route render={() => {
+            if (isAuthenticated()) {
+            return <>
+            <Navbar />
+            <ApplicationViews />
+             </>
+            } else {
+                return <Redirect to="/login" />
+            }
+        }} />
+        <Route path="/login">
+            <Login />
+        </Route>
+        <Route path="/register">
+            <Register />
+        </Route>
+    </>
     
-    
+//^^Add a map to generate quiz component for each quiz. (Card system)
 }
