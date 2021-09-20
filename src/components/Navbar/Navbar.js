@@ -13,7 +13,7 @@ export const Navbar = (props) => {
                 <div id="navbarNavDropdown" className="navbar-collapse collapse">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
-                            <Link className="nav-link" to="/">Quizzical<span className="sr-only">(current)</span></Link>
+                            <Link className="nav-link" to="/">Quizzical</Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/myquizzes">My Quizzes</Link>

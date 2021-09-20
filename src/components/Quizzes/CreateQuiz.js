@@ -1,16 +1,70 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import TypeRepository from '../../data/TypeRepository'
+import {Question} from './Question'
+import CategoriesRepository from  '../../data/CategoriesRepository'
+import { QuestionContext } from './QuestionContext'
+import UserRepository from '../../data/UserRepository'
+
 
 
 
 export const CreateQuiz = () => {
 
     const [quizData, updateQuiz] = useState({
+        quizId: 0,
         quizName: "",
-        categoryId: 0,
+        categoryId: "",
         userId: 0
     })
 
+    const [quizName, setQuizName] = useState("")
+    const [currentQuestion, setCurrentQuestion] = useState(0)
+    const [questionArray, updateQuestionArray] = useState([ { number: 1 }])
+    const [categories, updateCategories] = useState([])
+    const [quizCategory, setQuizCategory] = useState("")
+    const [currentUser, setCurrentUser] = useState("")
+    const history = useHistory()
+
+
+    useEffect(() => {
+        CategoriesRepository.getAllCategories()
+        .then(r => updateCategories(r))
+        // .then(UserRepository.getCurrentUser())
+        // .then(r => setCurrentUser(r))
+        // .then(console.log(currentUser))
+    }, []
+    )
+
+
+
+    const addQuestion = () => {
+        // Before adding a question, post Quiz to database?
+        // If Quiz is canceled, DELETE from database.
+        // When submitting, assign all those questions for the quiz to the QuizId in database.
+
+
+        const newQuestion = {
+            number: questionArray.length + 1,
+            quizId: 0
+            // questionTypeId:
+            // content:
+        }
+
+
+        // Fill out all data before addquestion can be pressed
+        // Post question when 'Addquestion is pressed'
+        // Fetch the question array
+        updateQuestionArray(questionArray => [...questionArray, newQuestion])
+
+    }
+
+    const handleCancel = () => {
+        history.push("/")
+    }
+
     const handleQuizSubmit = (e) => {
+
         e.preventDefault()
 
         const newQuiz = {
@@ -19,136 +73,63 @@ export const CreateQuiz = () => {
             userId: quizData.userId
         }
 
-    }
-
-    const handleQuizInput = (e) => {
-
-        const copiedData = { ...quizData }
-        copiedData[e.target.id] = e.target.value
-        updateQuiz(copiedData)
+        updateQuiz(newQuiz)
 
     }
 
 
     return (
         <>
+
+            <form className="quizForm">
             <h1>Create a Quiz</h1>
-            <form>
                 <div className="quiz-form"></div>
-                <label htmlFor="quizName">Quiz Name</label>
+                <label htmlFor="quizName">Quiz Name:    </label>
                 <input
                     type="text"
                     required
                     autoFocus
                     className="form-control"
+                    onChange={e => setQuizName(e.target.value)}
                     id="quizName"
                     placeholder="Quiz name"
                 />
+                <div className="form--categories">
+                <label htmlFor="categories">Category:</label>
+                <br></br>
+                {categories.map((category) => { return (
+                    <>
+                    <label htmlFor={`category--${category.name}`}>{`${category.name}`}</label>
+                    <input
+                        type="radio"
+                        required
+                        className="form-control"
+                        id={`category--${category.name}`}
+                        name="categoryGroup"
+                        value={category.id}
+                        onChange={e => setQuizCategory(e.target.value)}
+                    />
+                    <br></br>
+                    </>)
+                })}
+                </div>
                 {/* Generate multiple questions */}
-                <h2>Question</h2>
-                <div className='form-questionContent'>
-                    <label htmlFor="questionContent">Question:  </label>
-                    <input
-                        type="text"
-                        required
-                        className="form-control"
-                        id="quizName"
-                        placeholder="Question"
-                    />
-                </div>
-                <label htmlFor="selectionType">Selection Type:  </label>
-                <label htmlFor="multipleChoice">Multiple Choice</label>
-                <input
-                    type="radio"
-                    required
-                    className="form-control"
-                    id="multipleChoice"
-                    placeholder="Selection Type"
-                    checked
-                />
-                <label htmlFor="trueFalse">True/False</label>
-                <input
-                    type="radio"
-                    required
-                    className="form-control"
-                    id="trueFalse"
-                    placeholder="Selection Type"
-                />
-                <label htmlFor="fillinBlank">Fill-in Blank</label>
-                <input
-                    type="radio"
-                    required
-                    className="form-control"
-                    id="fillinBlank"
-                    placeholder="Selection Type"
-                />
-                <div className="form-possibleAnswers">
-                    <label htmlFor="possibleAnswers">Possible Answers:</label>
-                    <input
-                        type="text"
-                        required
-                        className="form-control"
-                        id="possibleAnswer"
-                        placeholder="Answer 1"
-                    />
-                    <input
-                        type="text"
-                        required
-                        className="form-control"
-                        id="quizName"
-                        placeholder="Answer 2"
-                    />
-                    <input
-                        type="text"
-                        required
-                        className="form-control"
-                        id="quizName"
-                        placeholder="Answer 3"
-                    />
-                    <input
-                        type="text"
-                        required
-                        className="form-control"
-                        id="quizName"
-                        placeholder="Answer 4"
-                    />
-                </div>
-                <div className="form-category">
-                    <label htmlFor="categories">Category:</label>
-                    <label htmlFor="categoryHistory">History</label>
-                    <input
-                        type="radio"
-                        required
-                        className="form-control"
-                        id="categoryHistory"
-                        placeholder="Category"
-                        checked
-                    />
-                    <label htmlFor="categoryScience">Science</label>
-                    <input
-                        type="radio"
-                        required
-                        className="form-control"
-                        id="categoryScience"
-                        placeholder="Category"
-                    />
-                    <label htmlFor="categoryMath">Math</label>
-                    <input
-                        type="radio"
-                        required
-                        className="form-control"
-                        id="categoryMath"
-                        placeholder="Category"
-                    />
-                </div>
+                <QuestionContext.Provider value = {[questionArray, updateQuestionArray]}>
+                    {/* Map over question array */}
+                {questionArray.map(
+                    question => {
+                        return <Question number={question.number}/>
+                    }
+                )}
+                </QuestionContext.Provider>
                 <div className="addQuestion">
-                    <button>Add Question</button>
+                    <button onClick={() => addQuestion()}>Add Question</button>
                 </div>
                 <div className="submitButton">
                     <button>Submit Quiz</button>
                 </div>
                 <div className="cancelButton">
-                    <button>Cancel</button>
+                    <button onClick={() => handleCancel()}>Cancel</button>
                 </div>
             </form>
         </>

@@ -7,5 +7,10 @@ export default {
     },
     getAllUsers() {
         return fetchIt(`${Settings.remoteURL}/users`)
+    },
+    getCurrentUser() {
+        const userObject = localStorage.getItem("quiz_token")
+        Buffer.toString(userObject)
+        console.log(userObject)
     }
 }
