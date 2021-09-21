@@ -2,26 +2,30 @@ import React, { useState, useEffect } from 'react'
 
 export const MultipleChoice = ( {questionNumber }) => {
 
-    const [possibleAnswers, setPossibleAnswers] = useState([])
-    const [correctAnswer, setCorrectAnswer] = useState([])
+    const [possibleAnswers, setPossibleAnswers] = useState({})
+    const [correctAnswerId, setCorrectAnswer] = useState([])
 
-    const handleCorrectAnswer = (answerId) => {
+    const handleCorrectAnswer = (inputId) => {
 
-        switch(answerId) {
+        switch(inputId) {
 
             case `correctAnswer1--${questionNumber}`:
+                setCorrectAnswer(`possibleAnswer1--${questionNumber}`)
                 return 
             break;
 
-            case `correctAnswer1--${questionNumber}`:
+            case `correctAnswer2--${questionNumber}`:
+                setCorrectAnswer(`possibleAnswer2--${questionNumber}`)
                 return 
             break;
 
-            case `correctAnswer1--${questionNumber}`:
+            case `correctAnswer3--${questionNumber}`:
+                setCorrectAnswer(`possibleAnswer3--${questionNumber}`)
                 return 
             break;
 
-            case `correctAnswer1--${questionNumber}`:
+            case `correctAnswer4--${questionNumber}`:
+                setCorrectAnswer(`possibleAnswer4--${questionNumber}`)
                 return 
             break;
             
@@ -30,7 +34,8 @@ export const MultipleChoice = ( {questionNumber }) => {
 
     const handlePossibleAnswer = (answerId) => {
 
-        
+    
+
     }
 
 
@@ -53,6 +58,7 @@ export const MultipleChoice = ( {questionNumber }) => {
                     id={`correctAnswer1--${questionNumber}`}
                     className="correct-button"
                     name="correctAnswer"
+                    onChange={e => handleCorrectAnswer(e.target.id)}
                 />
                 Correct Answer
                 <br></br>
@@ -69,7 +75,7 @@ export const MultipleChoice = ( {questionNumber }) => {
                     id={`correctAnswer2--${questionNumber}`}
                     className="correct-button"
                     name="correctAnswer"
-
+                    onChange={e => setCorrectAnswer(e.target.id)}
                 />
                 Correct Answer
                 <br></br>
@@ -86,6 +92,7 @@ export const MultipleChoice = ( {questionNumber }) => {
                     id={`correctAnswer3--${questionNumber}`}
                     className="correct-button"
                     name="correctAnswer"
+                    onChange={e => setCorrectAnswer(e.target.id)}
                 />
                 Correct Answer
                 <br></br>
@@ -102,6 +109,7 @@ export const MultipleChoice = ( {questionNumber }) => {
                     id={`correctAnswer4--${questionNumber}`}
                     className="correct-button"
                     name="correctAnswer"
+                    onChange={e => setCorrectAnswer(e.target.id)}
                 />
                 Correct Answer
             </div>

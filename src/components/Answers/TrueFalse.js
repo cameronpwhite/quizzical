@@ -1,6 +1,27 @@
-import React from 'react'
+import React, {useState} from 'react'
+
 
 export const TrueFalse = ({ questionNumber }) => {
+
+    const [possibleAnswers, setPossibleAnswers] = useState({})
+    const [correctAnswer, setCorrectAnswer] = useState([])
+
+    const handleCorrectAnswer = (answerId) => {
+
+        switch(answerId) {
+
+            case `correctAnswer1--${questionNumber}`:
+                setCorrectAnswer(`possibleAnswer1--${questionNumber}`)
+                return 
+            break;
+
+            case `correctAnswer2--${questionNumber}`:
+                setCorrectAnswer(`possibleAnswer2--${questionNumber}`)
+                return 
+            break;  
+        }
+    }
+
 
     return (
         <>
@@ -12,7 +33,7 @@ export const TrueFalse = ({ questionNumber }) => {
                     type="text"
                     required
                     className="form-control"
-                    id="possibleAnswer1"
+                    id={`possibleAnswer1--${questionNumber}`}
                     placeholder="Answer 1"
                 />
                 <input
@@ -20,7 +41,7 @@ export const TrueFalse = ({ questionNumber }) => {
                     required
                     name="answerCorrect"
                     className="correct-button"
-                    id="correctAnswer"
+                    id={`correctAnswer1--${questionNumber}`}
                 />
                 Correct Answer
                 <br></br>
@@ -28,7 +49,7 @@ export const TrueFalse = ({ questionNumber }) => {
                     type="text"
                     required
                     className="form-control"
-                    id="possibleAnswer2"
+                    id={`possibleAnswer2--${questionNumber}`}
                     placeholder="Answer 2"
                 />
                 <input
@@ -36,7 +57,7 @@ export const TrueFalse = ({ questionNumber }) => {
                     required
                     name="answerCorrect"
                     className="correct-button"
-                    id="correctAnswer"
+                    id={`correctAnswer2--${questionNumber}`}
                 />
                 Correct Answer
             </div>

@@ -5,6 +5,7 @@ import { TrueFalse} from './../Answers/TrueFalse'
 import  {MultipleChoice} from '../Answers/MultipleChoice'
 import {FillinBlank} from './../Answers/FillinBlank'
 import TypeRepository from '../../data/TypeRepository'
+
 export const Question = ({ number }) => {
     
     const [questionContent, setQuestionContent] = useState("")
@@ -40,8 +41,6 @@ export const Question = ({ number }) => {
                 return question.number === questionObj.number
             }
         )
-
-        const questionIndex = questionArray.indexOf(foundQuestion)
 
         const newQuestionArray = questionArray.filter(
             question => {
@@ -107,8 +106,10 @@ export const Question = ({ number }) => {
             
             {generateAnswerForm(selectionType)}
 
-            <div className="removeQuestion">
+            { number !== 1 ? (<div className="removeQuestion">
                     <button id={`removeQuestion--${number}`} onClick={(e) => removeQuestion({number}, e)}>Remove Question</button>
-            </div>
+            </div>)
+            : "" 
+            }
         </>)
 }

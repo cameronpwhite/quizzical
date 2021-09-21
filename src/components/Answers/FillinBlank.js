@@ -1,6 +1,7 @@
 import React from 'react'
 
 export const FillinBlank = ({ questionNumber }) => {
+
     return (
         <>
             <div className="form-possibleAnswers">
@@ -12,18 +13,18 @@ export const FillinBlank = ({ questionNumber }) => {
                     required
                     name="answerInput"
                     className="form-control"
-                    id={`possibleAnswer--${questionNumber}`}
+                    id={`possibleAnswer1--${questionNumber}`}
                     placeholder="Answer 1"
                 />
-                <label htmlFor={`correctAnswer--${questionNumber}`}>Correct Answer</label>
                 <input
                     type="radio"
                     required
                     name="answerCorrect"
                     className="correct-button"
-                    id={`correctAnswer--${questionNumber}`}
+                    id={`correctAnswer1--${questionNumber}`}
                     defaultChecked
                 />
+                Correct Answer
             </div>
         </>
     )
