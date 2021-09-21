@@ -6,6 +6,7 @@ import useSimpleAuth from '../hooks/UseSimpleAuth'
 import Login from './Auth/Login'
 import { Register } from './Auth/Register'
 import { ApplicationViews } from '../ApplicationViews'
+import { QuestionContext } from './Quizzes/QuestionContext'
 
 export const Quizzical = () => {
     const { isAuthenticated } = useSimpleAuth()

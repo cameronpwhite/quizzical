@@ -34,7 +34,7 @@ export const Register = () => {
     return (
         <main style={{ textAlign: "center" }}>
             <form className="form--login" onSubmit={handleRegister}>
-                <h1 className="h3 mb-3 font-weight-normal">Please Register for NSS Kennels</h1>
+                <h1 className="h3 mb-3 font-weight-normal">Please Register for Quizzical</h1>
                 <fieldset>
                     <label htmlFor="displayName"> Display Name </label>
                     <input type="text" onChange={handleUserInput}
