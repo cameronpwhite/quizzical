@@ -1,36 +1,31 @@
-import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import {Question} from './Question'
-import CategoriesRepository from  '../../data/CategoriesRepository'
+import React, { useState, useEffect, useContext } from 'react'
+
+import { Question } from './Question'
+
 import { QuestionContext } from './QuestionContext'
 
+import { QuizContext } from './QuizContext'
+
+import Settings from '../../data/Settings'
 
 
-export const QuizForm = ({ quizFormToggled }) => {
+export const QuizForm = ({ quizId }) => {
 
     const [quizData, updateQuiz] = useState({
-        quizId: 0,
+        quizId: quizId,
         quizName: "",
         categoryId: "",
         userId: 0
     })
 
-    const [quizName, setQuizName] = useState("")
-    const [questionArray, updateQuestionArray] = useState([])
-    const [categories, updateCategories] = useState([])
-    const [quizCategory, setQuizCategory] = useState("")
-    const [currentUser, setCurrentUser] = useState("")
-    const history = useHistory()
 
+    const [questionArray, updateQuestionArray] = useState([{
+        number: 1,
+        quizId: quizId
+    }
+    ])
 
-    useEffect(() => {
-        CategoriesRepository.getAllCategories()
-        .then(r => updateCategories(r))
-        // .then(UserRepository.getCurrentUser())
-        // .then(r => setCurrentUser(r))
-        // .then(console.log(currentUser))
-    }, []
-    )
+    const [quizForm, toggleQuizForm] = useContext(QuizContext)
 
     const addQuestion = () => {
         // Before adding a question, post Quiz to database?
@@ -38,7 +33,7 @@ export const QuizForm = ({ quizFormToggled }) => {
         // When submitting, assign all those questions for the quiz to the QuizId in database.
         const newQuestion = {
             number: questionArray.length + 1,
-            quizId: 0
+            quizId: quizId
             // questionTypeId:
             // content:
         }
@@ -46,69 +41,59 @@ export const QuizForm = ({ quizFormToggled }) => {
         // Post question when 'Addquestion is pressed'
         // Fetch the question array
         updateQuestionArray(questionArray => [...questionArray, newQuestion])
-
+        console.log(questionArray)
     }
 
     const handleCancel = () => {
-        history.push("/")
+
+        toggleQuizForm(!quizForm)
+        fetch(`${Settings.remoteURL}/quizzes`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
+            .then(r => r.json())
+            .then(r => deleteCreatedQuiz(r))
     }
 
+    const deleteCreatedQuiz = (quizObjectArray) => {
+        
+        const createdQuiz = quizObjectArray[quizObjectArray.length - 1]
 
-return (
+        fetch(`${Settings.remoteURL}/quizzes/${createdQuiz.id}`, {
+            method: 'DELETE',
+        })
+    }
+
+    const handleSubmit = () => {
+        console.log(quizData)
+    }
+
+    return (
         <>
-        { {quizFormToggled}
-        ? "good soup"
-        : ""}
-    <form className="quizForm">
-            <h1>Create a Quiz</h1>
-                <div className="quiz-form"></div>
-                <label htmlFor="quizName">Quiz Name:    </label>
-                <input
-                    type="text"
-                    required
-                    autoFocus
-                    className="form-control"
-                    onChange={e => setQuizName(e.target.value)}
-                    id="quizName"
-                    placeholder="Quiz name"
-                />
-                <div className="form--categories">
-                <label htmlFor="categories">Category:</label>
-                <br></br>
-                {categories.map((category) => { return (
-                    <>
-                    <label htmlFor={`category--${category.name}`}>{`${category.name}`}</label>
-                    <input
-                        type="radio"
-                        required
-                        className="form-control"
-                        id={`category--${category.name}`}
-                        name="categoryGroup"
-                        value={category.id}
-                        onChange={e => setQuizCategory(e.target.value)}
-                    />
-                    <br></br>
-                    </>)
-                })}
-                </div>
+            {}
+            <form className="quizForm">
+
                 {/* Generate multiple questions */}
-                <QuestionContext.Provider value = {[questionArray, updateQuestionArray]}>
+                <QuestionContext.Provider value={[questionArray, updateQuestionArray]}>
                     {/* Map over question array */}
-                {questionArray.map(
-                    question => {
-                        return <Question number={question.number}/>
-                    }
-                )}
+                    {questionArray.map(
+                        question => {
+                            return <Question key={question.number} number={question.number} />
+                        }
+                    )}
                 </QuestionContext.Provider>
                 <div className="addQuestion">
                     <button onClick={() => addQuestion()}>Add Question</button>
                 </div>
                 <div className="submitButton">
-                    <button>Submit Quiz</button>
+                    <button onClick={() => handleSubmit()}>Submit Quiz</button>
                 </div>
                 <div className="cancelButton">
                     <button onClick={() => handleCancel()}>Cancel</button>
                 </div>
             </form>
         </>
-)}
+    )
+}

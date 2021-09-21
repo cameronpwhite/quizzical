@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
-import CategoriesRepository from '../../data/CategoriesRepository'
 import { QuestionContext } from './QuestionContext'
 import { TrueFalse} from './../Answers/TrueFalse'
 import  {MultipleChoice} from '../Answers/MultipleChoice'
 import {FillinBlank} from './../Answers/FillinBlank'
-import TypeRepository from '../../data/TypeRepository'
 
 export const Question = ({ number }) => {
     
@@ -13,6 +11,8 @@ export const Question = ({ number }) => {
     const [selectionType, setSelectionType] = useState("")
     const [questionArray, updateQuestionArray] = useContext(QuestionContext)
 
+
+    
     const generateAnswerForm = (selectionType) => {
         
         switch(selectionType) {
