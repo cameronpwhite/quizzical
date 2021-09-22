@@ -7,6 +7,7 @@ import { QuestionContext } from './QuestionContext'
 import { QuizContext } from './QuizContext'
 
 import Settings from '../../data/Settings'
+import { fetchIt } from '../../data/Fetch'
 
 
 export const QuizForm = ({ quizId }) => {
@@ -21,9 +22,11 @@ export const QuizForm = ({ quizId }) => {
 
     const [questionArray, updateQuestionArray] = useState([{
         number: 1,
-        quizId: quizId
+        quizId
     }
     ])
+
+    fetchIt(`${Settings.remoteURL}/questions`, `POST`, JSON.stringify(questionArray[0]))
 
     const [quizForm, toggleQuizForm] = useContext(QuizContext)
 
@@ -31,6 +34,8 @@ export const QuizForm = ({ quizId }) => {
         // Before adding a question, post Quiz to database?
         // If Quiz is canceled, DELETE from database.
         // When submitting, assign all those questions for the quiz to the QuizId in database.
+
+
         const newQuestion = {
             number: questionArray.length + 1,
             quizId: quizId
@@ -40,6 +45,10 @@ export const QuizForm = ({ quizId }) => {
         // Fill out all data before addquestion can be pressed
         // Post question when 'Addquestion is pressed'
         // Fetch the question array
+
+        fetchIt(`${Settings.remoteURL}/questions`, `POST`, JSON.stringify(newQuestion))
+        .then()
+
         updateQuestionArray(questionArray => [...questionArray, newQuestion])
         console.log(questionArray)
     }
