@@ -19,9 +19,6 @@ export const CreateQuiz = () => {
     useEffect(() => {
         CategoriesRepository.getAllCategories()
             .then(r => updateCategories(r))
-        // .then(UserRepository.getCurrentUser())
-        // .then(r => setCurrentUser(r))
-        // .then(console.log(currentUser))
     }, []
     )
 

@@ -29,6 +29,4 @@ export const Quizzical = () => {
             <Register />
         </Route>
     </>
-    
-//^^Add a map to generate quiz component for each quiz. (Card system)
 }

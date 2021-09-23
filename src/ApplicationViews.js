@@ -4,6 +4,7 @@ import Login from './components/Auth/Login'
 import { Register } from './components/Auth/Register'
 import {Quiz} from './components/Quizzes/Quiz'
 import {CreateQuiz} from './components/Quizzes/CreateQuiz'
+import {MyQuizzes} from './components/MyQuizzes/MyQuizzes'
 
 
 export const ApplicationViews = () => {
@@ -22,7 +23,11 @@ export const ApplicationViews = () => {
             <CreateQuiz />
         </Route>
 
-        <Route path ="/">
+        <Route path="/myquizzes">
+            <MyQuizzes />
+        </Route>
+
+        <Route exact path ="/">
         <h1>Welcome to Quizzical</h1>
         <h2>Featured Quizzes</h2>
         <Quiz />

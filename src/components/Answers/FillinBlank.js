@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { QuestionContext } from '../Quizzes/QuestionContext'
 import Settings from '../../data/Settings'
 import { fetchIt } from '../../data/Fetch'
@@ -9,7 +9,23 @@ export const FillinBlank = ({ questionNumber }) => {
     const [answersSubmitted, toggleSubmitted] = useState(false)
     const [questionArray, updateQuestionArray] = useContext(QuestionContext)
     const [questionId, setQuestionId] = useState(0)
-        const [correctAnswerId, setCorrectAnswer] = useState([])
+    const [answerContent, setAnswerContent] = useState("")
+    const [correctAnswerId, setCorrectAnswer] = useState([])
+
+    useEffect(() => {
+
+    fetchIt(`${Settings.remoteURL}/questions`)
+    .then(res => getDatabaseQuestionId(res))
+
+        const newAnswer = {
+            questionId: questionId,
+            content: answerContent,
+            correct: true
+        }
+
+    setPossibleAnswer1(newAnswer)
+
+    }, [questionId, answerContent])
 
     const getCurrentQuestion = (questionArray) => {
         
@@ -35,26 +51,15 @@ export const FillinBlank = ({ questionNumber }) => {
         setQuestionId(databaseQuestion.id)
     }
 
-    const handlePossibleAnswer = (answerId, answerContent) => {
+    const handlePossibleAnswer = (answerContent) => {
 
-        fetchIt(`${Settings.remoteURL}/questions`)
-        .then(res => getDatabaseQuestionId(res))
-
-
-            const newAnswer = {
-                questionId: questionId,
-                content: answerContent,
-                correct: true
-            }
-
-        setPossibleAnswer1(newAnswer)
     }
 
     const handleSubmit = () => {
 
         if (possibleAnswer1) {        
         fetchIt(`${Settings.remoteURL}/answers`, `POST`, JSON.stringify(possibleAnswer1))
-        .then(toggleSubmitted(!answersSubmitted))
+        .then(() => toggleSubmitted(!answersSubmitted))
         console.log("POSTED!")
         } else {
             console.log("Missing some things")
@@ -75,7 +80,7 @@ export const FillinBlank = ({ questionNumber }) => {
                     className="form-control"
                     id={`possibleAnswer1--${questionNumber}`}
                     placeholder="Answer 1"
-                    onChange={e => handlePossibleAnswer(e.target.id, e.target.value)}
+                    onChange={e => setAnswerContent(e.target.value)}
                 />
                 <input
                     type="radio"

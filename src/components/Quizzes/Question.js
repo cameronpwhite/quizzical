@@ -3,16 +3,50 @@ import { QuestionContext } from './QuestionContext'
 import { TrueFalse} from './../Answers/TrueFalse'
 import  {MultipleChoice} from '../Answers/MultipleChoice'
 import {FillinBlank} from './../Answers/FillinBlank'
+import Settings from '../../data/Settings'
+import { fetchIt } from '../../data/Fetch'
 
-export const Question = ({ number }) => {
+export const Question = ({ number, selectionCallback, contentCallback, quizId }) => {
     
     const [questionContent, setQuestionContent] = useState("")
-    const [selectionTypes, updateSelectionTypes] = useState([])
     const [selectionType, setSelectionType] = useState("")
     const [questionArray, updateQuestionArray] = useContext(QuestionContext)
 
 
+    const sendSelectionData = (selectionType) => {
+        selectionCallback(selectionType)
+    }
     
+    const sendContentData = (questionContent) => {
+        contentCallback(questionContent)
+    }
+
+    const setAndSendSelection = (selectionValue) => {
+        setSelectionType(selectionValue)
+        sendSelectionData(parseInt(selectionValue))
+    }
+
+    const setAndSendContent = (contentValue) => {
+        setQuestionContent(contentValue)
+        sendContentData(contentValue)
+    }
+
+    // const updateDatabaseQuestion = (questionArray) => {
+    //     const currentQuestion = questionArray.find(
+    //         question => {
+    //             return question.number === number && question.quizId === quizId
+    //         })
+    //         debugger
+    //     fetchIt(`${Settings.remoteURL}/questions/${currentQuestion.id}`, `PUT`)
+    // }
+
+    // useEffect(() => {
+    //     fetchIt(`${Settings.remoteURL}/questions`)
+    //     .then(res => updateDatabaseQuestion(res))
+    //     .then(res => console.log(res))
+
+    // }, [selectionType, questionContent])
+
     const generateAnswerForm = (selectionType) => {
         
         switch(selectionType) {
@@ -67,7 +101,7 @@ export const Question = ({ number }) => {
                     type="text"
                     required
                     className="form-control"
-                    onChange={e => setQuestionContent(e.target.value)}
+                    onChange={e => setAndSendContent(e.target.value)}
                     id="questionContent"
                     placeholder="Question"
                 />
@@ -81,7 +115,7 @@ export const Question = ({ number }) => {
                 id={`multipleChoice--${number}`}
                 value="3"
                 name={`selectForQuestion--${number}`}
-                onChange={e => setSelectionType(e.target.value)}
+                onChange={e => setAndSendSelection(e.target.value)}
             />
             <label htmlFor={`trueFalse--${number}`}>True/False</label>
             <input
@@ -91,7 +125,7 @@ export const Question = ({ number }) => {
                 id={`trueFalse--${number}`}
                 value="1"
                 name={`selectForQuestion--${number}`}
-                onChange={e => setSelectionType(e.target.value)}
+                onChange={e => setAndSendSelection(e.target.value)}
             />
             <label htmlFor={`fillinBlank--${number}`}>Fill-in Blank</label>
             <input
@@ -101,7 +135,7 @@ export const Question = ({ number }) => {
                 id={`fillinBlank--${number}`}
                 value="2"
                 name={`selectForQuestion--${number}`}
-                onChange={e => setSelectionType(e.target.value)}
+                onChange={e => setAndSendSelection(e.target.value)}
             />
             
             {generateAnswerForm(selectionType)}
